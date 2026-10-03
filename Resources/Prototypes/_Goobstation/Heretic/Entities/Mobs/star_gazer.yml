@@ -144,7 +144,5 @@
   - type: Tag
     tags:
     - CannotSuicide
-  - type: Viewcone
-    baseConeAngle: 360
   - type: NightVision
     lightingColor: white

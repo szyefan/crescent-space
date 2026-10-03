@@ -100,8 +100,6 @@
     conflicts:
     - MutationBlindness
     - MutationWeakPerception
-  - type: ViewconeModifier
-    angleModifier: 1.3
 
 - type: entity
   parent: BaseMutation
@@ -116,5 +114,3 @@
     conflicts:
     - MutationBlindness
     - MutationEnhancedPerception
-  - type: ViewconeModifier
-    angleModifier: 0.5 # gotta thug it out

@@ -13,8 +13,6 @@
     containers:
       board: !type:Container
   - type: RequireProjectileTarget
-  - type: Viewcone
-    baseConeAngle: 360 # prevent camera vision being messed up
   - type: Wires
     boardName: wires-board-name-camera
   - type: StationAiVision

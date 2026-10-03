@@ -18,8 +18,6 @@
     - TauCetiBasic
     - RootSpeak
   - type: FoliageIgnoringVision
-  - type: Viewcone
-    baseConeAngle: 360
   - type: Butcherable
     spawned:
     - id: MaterialWoodPlank1 # "bones"

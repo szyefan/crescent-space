@@ -25,7 +25,7 @@
   #    HeadSide : HEAD
 
 - type: entity
-  parent: [ ClothingHeadHelmetBase, BaseClothingViewconeMedium ] # Trauma - helmet reduces vision cone
+  parent: [ ClothingHeadHelmetBase ]
   id: ClothingHeadHelmetArmoredBase
   abstract: true
   components:
@@ -341,7 +341,7 @@
 
 #Fire Helmet
 - type: entity
-  parent: [ ClothingHeadLightBase, TemperatureProtection, BaseClothingViewconeSmall ] # Trauma - viewcone
+  parent: [ ClothingHeadLightBase, TemperatureProtection ]
   id: ClothingHeadHelmetFire
   name: fire helmet
   description: An atmos tech's best friend. Provides some heat resistance and looks cool.
@@ -385,7 +385,7 @@
 
 #Atmos Fire Helmet
 - type: entity
-  parent: [ClothingHeadLightBase, TemperatureProtection, BaseEngineeringContraband, BaseClothingViewconeSmall] # Trauma - viewcone
+  parent: [ClothingHeadLightBase, TemperatureProtection, BaseEngineeringContraband ]
   id: ClothingHeadHelmetAtmosFire
   name: atmos fire helmet
   description: An atmos fire helmet, able to keep the user cool in any situation.
@@ -461,7 +461,7 @@
 #ERT HELMETS
 #ERT Leader Helmet
 - type: entity
-  parent: [ BaseClothingViewconeSmall, BaseCentcommContraband, ClothingHeadHelmetArmoredBase, ClothingHeadHelmetBaseFoldable] # Trauma - less vision restriction, ClothingHeadHelmetBaseFoldable
+  parent: [ BaseCentcommContraband, ClothingHeadHelmetArmoredBase, ClothingHeadHelmetBaseFoldable]
   id: ClothingHeadHelmetERTLeader
   name: ERT leader helmet
   description: An in-atmosphere helmet worn by the leader of a Nanotrasen Emergency Response Team. Has blue highlights.

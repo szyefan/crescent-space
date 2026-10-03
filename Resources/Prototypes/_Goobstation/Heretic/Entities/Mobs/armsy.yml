@@ -186,8 +186,6 @@
     needsHands: false
   - type: Pullable
     canBeGrabbed: false
-  - type: Viewcone
-    baseConeAngle: 360
   - type: ThermalVision
     color: white
     toggleAction: null
@@ -211,5 +209,3 @@
   - type: TailedEntitySegment
     segmentSpriteState: armsy_mid
     tailSpriteState: armsy_end
-  - type: ViewconeOccludable
-    useMemory: false
