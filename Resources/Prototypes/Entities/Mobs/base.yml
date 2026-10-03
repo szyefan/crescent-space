@@ -12,10 +12,7 @@
     penetrateDamage: 15 # Kill million mices
     damagePenalty: 0.05
   - type: AnimatedEmotes
-  - type: Viewcone
-  - type: ViewconeOccludable # if it can move, you probably can't remember it forever?
     useMemory: false # forgor
-  - type: ViewconeFootstepsEffect # if you can hear it move you will see steps effects on screen
   # </Trauma>
   - type: Sprite
     noRot: true
@@ -185,9 +182,6 @@
   id: MobCombat
   abstract: true
   components:
-  # <Trauma>
-  - type: ViewconeMeleeEffect
-  # </Trauma>
   - type: CombatMode
   - type: MeleeWeapon
     hidden: true

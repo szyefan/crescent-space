@@ -260,8 +260,6 @@
     lightingColor: white
   - type: Eye
     drawFov: false
-  - type: Viewcone
-    baseConeAngle: 360
 
 - type: entity
   parent: [BaseMobGhoulLock, MobGhoulProphetBase]

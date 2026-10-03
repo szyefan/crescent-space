@@ -1,5 +1,5 @@
 - type: entity
-  parent: [ClothingMaskPullableBase, BaseClothingViewconeSmall] # Trauma
+  parent: [ClothingMaskPullableBase]
   id: ClothingMaskGas
   name: gas mask
   description: A face-covering mask that can be connected to an air supply.
@@ -77,8 +77,6 @@
       message: "HALT! HALT! HALT!!"
   - type: IngestionBlocker
     blockSmokeIngestion: true
-  - type: ViewconeModifier
-    angleModifier: 1.0
   # </Trauma>
   - type: Item
     size: Tiny
@@ -110,8 +108,6 @@
     - SyndicateBreathMask
   - type: IngestionBlocker
     blockSmokeIngestion: true
-  - type: ViewconeModifier
-    angleModifier: 1.0
     # </Trauma>
   - type: Sprite
     sprite: Clothing/Mask/gassyndicate.rsi
@@ -198,8 +194,6 @@
     - Mask
   - type: IngestionBlocker
     blockSmokeIngestion: true
-  - type: ViewconeModifier
-    angleModifier: 0.90
   # </Trauma>
   - type: Sprite
     sprite: Clothing/Mask/gasexplorer.rsi
@@ -620,8 +614,6 @@
     - WhitelistChameleon
     - GasMask
     - Mask
-  - type: ViewconeModifier
-    angleModifier: 0.90
   # </Trauma>
   - type: Sprite
     sprite: Clothing/Mask/merc.rsi
@@ -646,8 +638,6 @@
   # <Trauma>
   - type: IngestionBlocker
     blockSmokeIngestion: true
-  - type: ViewconeModifier
-    angleModifier: 1.0
   # </Trauma>
   - type: Sprite
     sprite: Clothing/Mask/ert.rsi
@@ -692,8 +682,6 @@
         Aerial: -1
       chanceMultipliers:
         Aerial: 0
-  - type: ViewconeModifier
-    angleModifier: 1.5
   # </Trauma>
   - type: Sprite
     sprite: Clothing/Mask/squadron.rsi
@@ -1025,7 +1013,7 @@
   - type: IdentityBlocker
 
 - type: entity
-  parent: [ClothingMaskGas, WeldingMaskBase, BaseClothingViewconeSmall] # Trauma - viewcone
+  parent: [ClothingMaskGas, WeldingMaskBase]
   id: ClothingMaskWeldingGas
   name: welding gas mask
   description: A gas mask with built in welding goggles and face shield. Looks like a skull, clearly designed by a nerd.

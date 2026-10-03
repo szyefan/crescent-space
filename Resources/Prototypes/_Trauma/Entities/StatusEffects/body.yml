@@ -7,8 +7,6 @@
   components:
   - type: StaminaModifierStatusEffect
     modifier: 1.15
-  - type: ViewconeModifier
-    angleModifier: 1.2
 
 - type: entity
   parent: MobStatusEffectBase

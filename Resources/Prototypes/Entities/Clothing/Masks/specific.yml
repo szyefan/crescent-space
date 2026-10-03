@@ -19,8 +19,6 @@
     - type: HideLayerClothing
       slots:
       - Snout
-    - type: ViewconeModifier # Trauma
-      angleModifier: 1
 
 - type: entity
   parent: ClothingMaskGasChameleon

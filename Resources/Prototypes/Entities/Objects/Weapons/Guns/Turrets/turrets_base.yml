@@ -4,10 +4,6 @@
   id: BaseWeaponTurretIndestructible
   name: turret
   components:
-  # <Trauma>
-  - type: ViewconeOccludable
-    occludeIfAnchored: true
-  # </Trauma>
   - type: InteractionOutline
   - type: Actions
   - type: Fixtures

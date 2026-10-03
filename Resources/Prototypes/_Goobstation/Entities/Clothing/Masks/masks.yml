@@ -90,8 +90,6 @@
     deconstructionTarget: null
   - type: Item
     size: Tiny
-  - type: ViewconeModifier
-    angleModifier: 1.0
 
 - type: entity # TODO: Whenever vampirism is ported, make this block it.
   parent: ClothingMaskBase
