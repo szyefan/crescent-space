@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: entity
+  parent: [ Incorporeal, BaseMob ]
+  id: PolymorphWailingJaunt
+  name: Unknown
+  description: You can't figure out what that is.
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: _Trauma/Mobs/Monsters/wailinghorse.rsi
+    state: jaunting
+  - type: MovementSpeedModifier
+    baseSprintSpeed: 12
+    baseWalkSpeed: 8
+  - type: Input
+    context: "ghost"
+  - type: NoSlip
+  - type: BloodCrawl
+    actionId: BloodCrawlActionWailing
+    isCrawling: true
+    blood:
+    - Blood
+    - AmmoniaBlood
+    - InsectBlood
+    - CopperBlood
+  - type: Visibility
+    layer: 2
+  - type: Spectral
+  - type: Eye
+    drawFov: false
+    visMask:
+    - Normal
+    - Ghost
+  - type: MindContainer
+  - type: MindExaminable
+  - type: IsDeadIC
+    dead: false
