@@ -1,6 +1,9 @@
 // <Trauma>
 using Content.Trauma.Common.Knowledge;
 // </Trauma>
+
+using Content.Shared._NF.CCVar;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
@@ -46,6 +49,7 @@ namespace Content.Server.Preferences.Managers
         [Dependency] private IPrototypeManager _prototypeManager = default!;
         [Dependency] private MarkingManager _marking = default!;
         [Dependency] private ISerializationManager _serialization = default!;
+        [Dependency] private readonly IEntityManager _entityManager = default!; // Frontier
 
         // Cache player prefs on the server so we don't need as much async hell related to them.
         private readonly Dictionary<NetUserId, PlayerPrefData> _cachedPlayerPrefs =
@@ -253,7 +257,7 @@ namespace Content.Server.Preferences.Managers
             }
         }
 
-        public async Task SetProfile(NetUserId userId, int slot, HumanoidCharacterProfile profile)
+        public async Task SetProfile(NetUserId userId, int slot, HumanoidCharacterProfile profile, bool validateFields = true) // Frontier: add validateFields
         {
             if (!_cachedPlayerPrefs.TryGetValue(userId, out var prefsData) || !prefsData.PrefsLoaded)
             {
@@ -268,6 +272,29 @@ namespace Content.Server.Preferences.Managers
             var session = _playerManager.GetSessionById(userId);
 
             profile.EnsureValid(session, _dependencies);
+
+            // Frontier: check for profile modifications (based on Monolith's impl)
+            if (validateFields && profile is HumanoidCharacterProfile humanProfile)
+            {
+                if (curPrefs.Characters.TryGetValue(slot, out var existingProfile) &&
+                    existingProfile is HumanoidCharacterProfile humanoidEditingTarget)
+                {
+                    if (humanProfile.BankBalance != humanoidEditingTarget.BankBalance)
+                    {
+                        _sawmill.Info($"{session.Name} has tried to modify a character's money (expected: {humanoidEditingTarget.BankBalance} requested: {humanProfile.BankBalance}). They may be using a modified client!");
+                        profile = humanProfile.WithBankBalance(humanoidEditingTarget.BankBalance);
+                    }
+                }
+                else
+                {
+                    if (humanProfile.BankBalance != HumanoidCharacterProfile.DefaultBalance)
+                    {
+                        _sawmill.Info($"{session.Name} tried to create a character with a non-default balance (expected: {HumanoidCharacterProfile.DefaultBalance} requested: {humanProfile.BankBalance}). They may be using a modified client!");
+                        profile = humanProfile.WithBankBalance(HumanoidCharacterProfile.DefaultBalance);
+                    }
+                }
+            }
+            // End Frontier: check for profile modifications (based on Monolith's impl)
 
             var profiles = new Dictionary<int, HumanoidCharacterProfile>(curPrefs.Characters)
             {
@@ -440,6 +467,10 @@ namespace Content.Server.Preferences.Managers
                 MaxCharacterSlots = MaxCharacterSlots
             };
             _netManager.ServerSendMessage(msg, session.Channel);
+
+            // Frontier: notify other entities that your player data is loaded.
+            if (session.AttachedEntity != null)
+                _entityManager.EventBus.RaiseLocalEvent(session.AttachedEntity.Value, new PreferencesLoadedEvent(session, prefsData.Prefs));
         }
 
         public void OnClientDisconnected(ICommonSession session)
@@ -497,6 +528,40 @@ namespace Content.Server.Preferences.Managers
             if (_cachedPlayerPrefs.TryGetValue(userId.Value, out var pref))
                 return pref.Prefs;
             return null;
+        }
+
+        public async Task RefreshPreferencesAsync(ICommonSession session, CancellationToken cancel)
+        {
+            if (!_cachedPlayerPrefs.TryGetValue(session.UserId, out var prefsData))
+                return;
+
+            var loadTask = LoadPrefs();
+            _cachedPlayerPrefs[session.UserId] = prefsData;
+
+            await loadTask;
+            return;
+
+            async Task LoadPrefs()
+            {
+                var prefs = GetPreferencesOrNull(session.UserId); //Crescent-Space this used to be awaitable on NF but now i had to switch to different method which is not as old one no onger returned this specifically
+
+                if (prefs != null)
+                {
+                    prefsData.Prefs = prefs;
+                    prefsData.PrefsLoaded = true;
+
+                    var msg = new MsgPreferencesAndSettings
+                    {
+                        Preferences = prefs,
+                        Settings = new GameSettings
+                        {
+                            MaxCharacterSlots = MaxCharacterSlots
+                        }
+                    };
+
+                    _netManager.ServerSendMessage(msg, session.Channel);
+                }
+            }
         }
 
         private async Task<Preference> GetOrCreatePreferencesAsync(NetUserId userId, CancellationToken cancel)
@@ -557,4 +622,18 @@ namespace Content.Server.Preferences.Managers
             _userDb.AddOnPlayerDisconnect(OnClientDisconnected);
         }
     }
+
+    // Frontier: event for notifying that preferences for a particular player have loaded in.
+    public sealed class PreferencesLoadedEvent : EntityEventArgs
+    {
+        public readonly ICommonSession Session;
+        public readonly PlayerPreferences Prefs;
+
+        public PreferencesLoadedEvent(ICommonSession session, PlayerPreferences prefs)
+        {
+            Session = session;
+            Prefs = prefs;
+        }
+    }
+    // End Frontier
 }

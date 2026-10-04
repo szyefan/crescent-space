@@ -23,7 +23,9 @@ namespace Content.Server.Preferences.Managers
         IEnumerable<KeyValuePair<NetUserId, HumanoidCharacterProfile>> GetSelectedProfilesForPlayers(List<NetUserId> userIds);
         bool HavePreferencesLoaded(ICommonSession session);
 
-        Task SetProfile(NetUserId userId, int slot, HumanoidCharacterProfile profile);
+        Task RefreshPreferencesAsync(ICommonSession session, CancellationToken cancel); // Frontier
+        Task SetProfile(NetUserId userId, int slot, HumanoidCharacterProfile profile, bool validateFields = true); // Frontier: add validateFields
+
         Task SetConstructionFavorites(NetUserId userId, List<ProtoId<ConstructionPrototype>> favorites);
     }
 }

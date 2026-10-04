@@ -20,16 +20,23 @@ public sealed partial class ToolComponent : Component
 
     [DataField, AutoNetworkedField]
     public SoundSpecifier? UseSound;
+
+    // Frontier: hide qualities
+    [DataField]
+    public bool HideQualities;
+    // End Frontier
 }
 
 /// <summary>
 /// Attempt event called *before* any do afters to see if the tool usage should succeed or not.
 /// Raised on both the tool and then target.
 /// </summary>
-public sealed class ToolUseAttemptEvent(EntityUid user, float fuel) : CancellableEntityEventArgs
+public sealed class ToolUseAttemptEvent(EntityUid user, float fuel, EntityUid tool, IEnumerable<ProtoId<ToolQualityPrototype>> qualities) : CancellableEntityEventArgs // Frontier: added tool, qualities
 {
     public EntityUid User { get; } = user;
     public float Fuel = fuel;
+    public EntityUid Tool { get; } = tool; // Frontier: the tool being used
+    public IEnumerable<ProtoId<ToolQualityPrototype>> Qualities { get; } = qualities; // Frontier: the tool qualities being used //Crescent-Space: changes were made turning this into the ToolQualityPrototype. hope this wont break function later if it will i suppose ill have to fix it
 }
 
 /// <summary>
