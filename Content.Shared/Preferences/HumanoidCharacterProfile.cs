@@ -2,6 +2,9 @@
 using Content.Goobstation.Common.Barks;
 using Content.Trauma.Common.Knowledge;
 // </Trauma>
+
+using Content.Shared._NF.Bank;
+
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -41,6 +44,8 @@ namespace Content.Shared.Preferences
         public static readonly ProtoId<EmoteSoundsPrototype> DefaultVoice = "MaleHuman";
         private static readonly Regex RestrictedNameRegex = new(@"[^A-Za-z0-9 '\-]");
         private static readonly Regex ICNameCaseRegex = new(@"^(?<word>\w)|\b(?<word>\w)(?=\w*$)");
+
+        public const int DefaultBalance = 30000; // Frontier
 
         /// <summary>
         /// Job preferences for initial spawn.
@@ -99,6 +104,9 @@ namespace Content.Shared.Preferences
 
         [DataField]
         public Gender Gender { get; private set; } = Gender.Male;
+
+        [DataField] // Frontier: Bank balance
+        public int BankBalance { get; private set; } = DefaultBalance; // Frontier: Bank balance
 
         /// <summary>
         /// Stores markings, eye colors, etc for the profile.
@@ -400,7 +408,7 @@ namespace Content.Shared.Preferences
         /// </summary>
         /// <param name="species">Species to constrain randomizer to.</param>
         /// <returns>A new character profile</returns>
-        public static HumanoidCharacterProfile RandomWithSpecies(string? species = null)
+        public static HumanoidCharacterProfile RandomWithSpecies(string? species = null, int balance = DefaultBalance) // Frontier: add balance arg
         {
             species ??= DefaultSpecies;
 
@@ -439,6 +447,13 @@ namespace Content.Shared.Preferences
         {
             return new(this) { Gender = gender };
         }
+
+        // Frontier: this is probably an issue and should be removed.
+        public HumanoidCharacterProfile WithBankBalance(int bankBalance)
+        {
+            return new(this) { BankBalance = bankBalance };
+        }
+        // End Frontier
 
         public HumanoidCharacterProfile WithSpecies(string species)
         {
@@ -639,6 +654,7 @@ namespace Content.Shared.Preferences
             if (Voice != other.Voice) return false;
             if (Gender != other.Gender) return false;
             if (Species != other.Species) return false;
+            if (BankBalance != other.BankBalance) return false; // Frontier
             // <Trauma>
             if (BarkVoice != other.BarkVoice) return false;
             if (!Knowledge.MemberwiseEquals(other.Knowledge)) return false;
@@ -736,6 +752,15 @@ namespace Content.Shared.Preferences
             {
                 flavortext = FormattedMessage.RemoveMarkupOrThrow(FlavorText);
             }
+
+            // Frontier
+            //make sure theres no funny bank stuff going on
+            var bankBalance = BankBalance;
+            if (BankBalance <= 0)
+            {
+                bankBalance = 0;
+            }
+            // End Frontier
 
             var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
 
@@ -913,6 +938,7 @@ namespace Content.Shared.Preferences
             hashCode.Add(Voice);
             hashCode.Add((int)Gender);
             hashCode.Add(Appearance);
+            hashCode.Add(BankBalance); // Frontier
             // <Trauma>
             hashCode.Add(BarkVoice);
             hashCode.Add(Knowledge);

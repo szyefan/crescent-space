@@ -69,6 +69,11 @@ public abstract partial class SharedToolSystem : EntitySystem
 
     private void OnExamine(Entity<ToolComponent> ent, ref ExaminedEvent args)
     {
+        // Frontier: hide tool qualities
+        if (ent.Comp.HideQualities)
+            return;
+        // End Frontier
+
         // If the tool has no qualities, exit early
         if (ent.Comp.Qualities.Count == 0 || !ent.Comp.Examinable) // Trauma - check examinable too
             return;
@@ -283,7 +288,7 @@ public abstract partial class SharedToolSystem : EntitySystem
             return false;
 
         // check if the tool allows being used
-        var beforeAttempt = new ToolUseAttemptEvent(user, fuel);
+        var beforeAttempt = new ToolUseAttemptEvent(user, fuel, tool, toolQualitiesNeeded); // Frontier:
         RaiseLocalEvent(tool, beforeAttempt);
         if (beforeAttempt.Cancelled)
             return false;
